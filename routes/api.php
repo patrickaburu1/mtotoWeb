@@ -81,5 +81,8 @@ Route::get('/getMessages','ForumController@getMessages');
 Route::post('/nextVisit/{mother_id}','ReportController@getNextVisit');
 
 //montly report
-Route::get('/report','ReportController@monthlyReport');
+Route::get('/report','ReportController@test');
+
+//test
+Route::get('/test','ReportController@test');
 

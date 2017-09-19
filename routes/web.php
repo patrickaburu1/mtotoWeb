@@ -12,11 +12,17 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/home', 'HomeController@index');
-Route::get('/test','testcontroller@reg');
-Route::get('/registerParent','ParentController@register');
+Route::post('/register/user','WebController@registerUser');
+
+Route::get('/register','WebController@newUser');
+
+Route::get('/blockUser','WebController@endUsers');
+
+//block user
+Route::get('/blockUser/{id}','WebController@blockUser');

@@ -71,6 +71,62 @@ class ReportController extends Controller
 
         return Response::json($d);
     }
+    public function test(Request $request){
+//        $rep=DB::table('child_immunizations')
+//            ->get();
+        $rep=DB::table('immunizations')
+            ->select(DB::raw('id'))
+            ->pluck('id');
 
+        foreach ($rep as $id) {
+
+
+            $count = DB::table('child_immunizations')
+                //->join('immunizations','child_immunizations.immunization_id','=','immunizations.id')
+                //  ->whereIn('immunization_id', $immunizations)
+                ->where('immunization_id', '=', $id)
+                // ->where('date_given','=', $rep->date_given)
+//            ->select(DB::raw('given_at'))
+//            ->groupBy('child_immunizations.immunization_id')
+//            ->groupBy('given_at')
+                ->count();
+
+             $data=DB::table('child_immunizations')
+                ->join('immunizations','child_immunizations.immunization_id','=','immunizations.id')
+                //->whereIn('immunization_id', $immunizations)
+                ->where('immunization_id','=', $id)
+                ->select(DB::raw('given_at,immunizations.name'))
+                ->groupBy('child_immunizations.immunization_id')
+                ->groupBy('given_at')
+                ->groupBy('immunizations.name')
+                //->count();
+                ->first();
+            $date[]=$data->given_at;
+            $name[]=$data->name;
+
+            $count1[]=$count;
+         }
+
+        foreach(array_combine($count1,$name) as $key=>$value) {
+            $data2['name']=$key;
+            $data2['number']=$value;
+           // $d[]=$data2;
+        }
+
+        $keysOne = array_keys($count1);
+        $keysTwo = array_keys($name);
+
+        $min = min(count($count1), count($name));
+
+        for($i = 0; $i < $min; $i++) {
+//            echo $count1[$keysOne[$i]] . "<br>";
+//            echo $name[$keysTwo[$i]] . "<br><br>";
+            $data2['number']=$count1[$keysOne[$i]];
+            $data2['name']=$name[$keysTwo[$i]];
+            $d[]=$data2;
+        }
+
+        return Response::json($d);
+    }
 
 }
